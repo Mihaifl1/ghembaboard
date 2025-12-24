@@ -535,16 +535,18 @@ class GembaBoardApp:
                     i.id_type_machine    AS type_machine_id,
                     i.id_type_mentenance AS type_ment_id
                 FROM interventions i
-                JOIN device_types dt 
+                JOIN devices d
+                    ON i.id_machine = d.id
+                JOIN device_types dt
                     ON i.id_type_machine = dt.id
-                JOIN type_mentenance tm 
+                JOIN type_mentenance tm
                     ON i.id_type_mentenance = tm.id
-                LEFT JOIN users u 
+                LEFT JOIN users u
                     ON i.id_user = u.id
                 WHERE tm.name LIKE '%Extraordinary%'
                   AND dt.name = %s
                   AND i.created_at BETWEEN %s AND %s
-                  {self.location_sql_filter("i")}
+                  {self.location_sql_filter("d")}
                 ORDER BY i.created_at DESC
             """
 
